@@ -27,7 +27,7 @@ class paper:
                 tmpauthors = tmpauthor.split('and')
                 if verbose: print("tmpauthors:",tmpauthors)
                 if len(tmpauthors)>1:
-                    self.author = tmpauthors[0]+"and others"
+                    self.author = tmpauthors[0]+"at al."
                     collaborations = [s for s in tmpauthors if "collaboration" in s.lower()]
                     # if any("CMS Collaboration" in s for s in tmpauthors):
                     if len(collaborations) > 0:
