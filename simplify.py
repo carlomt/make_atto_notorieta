@@ -27,12 +27,12 @@ class paper:
                 tmpauthors = tmpauthor.split('and')
                 if verbose: print("tmpauthors:",tmpauthors)
                 if len(tmpauthors)>1:
-                    self.author = tmpauthors[0]+"at al."
-                    collaborations = [s for s in tmpauthors if "collaboration" in s.lower()]
-                    # if any("CMS Collaboration" in s for s in tmpauthors):
-                    if len(collaborations) > 0:
-                        for collaboration in collaborations:
-                            self.author += " ("+collaboration.strip()+")"
+                    self.author = tmpauthors[0]+"and others"
+                    # collaborations = [s for s in tmpauthors if "collaboration" in s.lower()]
+                    # # if any("CMS Collaboration" in s for s in tmpauthors):
+                    # if len(collaborations) > 0:
+                    #     for collaboration in collaborations:
+                    #         self.author += " ("+collaboration.strip()+")"
                 else:
                     if verbose: print("using tmpauthor")
                     self.author = tmpauthor
@@ -58,7 +58,7 @@ class paper:
     def __str__(self):
         message = '@'+self.key+",\n"
         for attr, value in self.__dict__.iteritems():
-            if value is not None:
+            if value is not None and "key" not in attr:
                 message += "\t"+attr+" = {"+str(value)+"},\n"
         message += "}\n"
         return(message)
@@ -67,12 +67,13 @@ class paper:
 
 def simplify(inputfile, limitn=None, verbose=False):
     with open(inputfile,'r') as file:
-        inputs = file.read().split('@')
+        inputs = file.read().strip().split('@')
         articles = [a for a in inputs if a[0]!='%']
         for i, article in enumerate(articles):
+            if len(article.split(',')) < 3: continue
             if limitn:
                 if i >= limitn: break
-            if verbose: print(article)
+            if verbose: print("before:",article)
             thisPaper = paper(article, verbose)
             print(thisPaper)            
 
