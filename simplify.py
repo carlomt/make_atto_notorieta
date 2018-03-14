@@ -49,7 +49,7 @@ class paper:
     
 
     def __str__(self):
-        message = self.key+",\n"
+        message = '@'+self.key+",\n"
         for attr, value in self.__dict__.iteritems():
             if value is not None:
                 message += "\t"+attr+" = {"+str(value)+"},\n"
