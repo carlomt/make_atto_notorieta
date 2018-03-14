@@ -6,7 +6,7 @@ import argparse
 class paper:
 
     
-    def __init__(self, text):
+    def __init__(self, text, verbose=False):
         self.key     = None        
         self.title   = None
         self.journal = None
@@ -16,18 +16,20 @@ class paper:
         self.volume  = None
         self.doi     = None
         
-        infos = text.split(',')
-        self.key = infos[0]        
+        infos = text.split('},')
+        self.key = infos[0].split(',')[0]        
         for info in infos:
             infs = info.split('=')    
             if "title" in infs[0].lower():
                 self.title = self.cleanstring(infs[1])
             if "author" in infs[0].lower():
                 tmpauthor = self.cleanstring(infs[1])
-                tmpauthor.split('. ')
-                if len(tmpauthor)>1:
-                    self.author = tmpauthor[0]+". and others"
+                tmpauthors = tmpauthor.split('and')
+                if verbose: print("tmpauthors:",tmpauthors)
+                if len(tmpauthors)>1:
+                    self.author = tmpauthors[0]+"and others"
                 else:
+                    if verbose: print("using tmpauthor")
                     self.author = tmpauthor
             if len(infs)>1 and "journal" in infs[0].lower():
                 self.journal = self.cleanstring(infs[1])
@@ -58,12 +60,15 @@ class paper:
 
     
 
-def simplify(inputfile, verbose=False):
+def simplify(inputfile, limitn=None, verbose=False):
     with open(inputfile,'r') as file:
         inputs = file.read().split('@')
         articles = [a for a in inputs if a[0]!='%']
-        for article in articles:
-            thisPaper = paper(article)
+        for i, article in enumerate(articles):
+            if limitn:
+                if i >= limitn: break
+            if verbose: print(article)
+            thisPaper = paper(article, verbose)
             print(thisPaper)            
 
         
@@ -72,7 +77,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", help="increase output verbosity",
                         action="store_true")
+    parser.add_argument("-n", "--justn", help="print only the first n papers", type=int)
     parser.add_argument("inputfile", help="input file name (a bib file)")
     args = parser.parse_args()
     
-    simplify(args.inputfile, args.verbose)
+    simplify(args.inputfile, args.justn, args.verbose)
