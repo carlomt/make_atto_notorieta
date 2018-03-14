@@ -28,6 +28,9 @@ class paper:
                 if verbose: print("tmpauthors:",tmpauthors)
                 if len(tmpauthors)>1:
                     self.author = tmpauthors[0]+"and others"
+                    # if "CMS Collaboration" in tmpauthors:
+                    if any("CMS Collaboration" in s for s in tmpauthors):  
+                        self.author += " (CMS Collaboration)"
                 else:
                     if verbose: print("using tmpauthor")
                     self.author = tmpauthor
