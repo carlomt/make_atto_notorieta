@@ -53,7 +53,9 @@ def simplify(inputfile, limitn=None, verbose=False):
             if 'journal' in entry:
                 print("\t journal = {",str(entry['journal']).strip(),"},")
             if 'number' in entry:
-                print("\t number = {",str(entry['number']).strip(),"},")                
+                print("\t number = {",str(entry['number']).strip(),"},")
+            if 'booktitle' in entry:
+                print("\t booktitle = {",str(entry['booktitle']).strip(),"},")                                
             print("}\n")
         # with open('out.bib', 'w') as out_file:
         #     bibtexparser.dump(bib_database, out_file)
